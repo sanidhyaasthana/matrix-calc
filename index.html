@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #5a67d8;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #5a67d8;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4c51bf;
+        }
+        .matrix-input {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Matrix Calculator</h1>
+        <form id="matrixForm" method="post" action="/calculate">
+            <label for="rows">Number of Rows:</label>
+            <input type="number" id="rows" name="rows" required min="1" placeholder="Enter the number of rows">
+
+            <label for="columns">Number of Columns:</label>
+            <input type="number" id="columns" name="columns" required min="1" placeholder="Enter the number of columns">
+
+            <div id="matrixInput" class="matrix-input"></div>
+
+            <button type="button" id="generateMatrix">Generate Matrix Fields</button>
+            <button type="submit" id="calculate" style="display: none;">Calculate</button>
+        </form>
+    </div>
+
+    <script>
+        const rowsInput = document.getElementById('rows');
+        const columnsInput = document.getElementById('columns');
+        const matrixInput = document.getElementById('matrixInput');
+        const generateMatrixButton = document.getElementById('generateMatrix');
+        const calculateButton = document.getElementById('calculate');
+
+        // Function to generate matrix fields
+        function generateMatrixFields() {
+            const rows = parseInt(rowsInput.value);
+            const columns = parseInt(columnsInput.value);
+
+            if (rows > 0 && columns > 0) {
+                matrixInput.innerHTML = '';
+                for (let i = 0; i < rows; i++) {
+                    const rowDiv = document.createElement('div');
+                    rowDiv.style.marginBottom = '5px';
+                    rowDiv.innerHTML = `<label>Row ${i + 1}:</label>`;
+                    for (let j = 0; j < columns; j++) {
+                        const input = document.createElement('input');
+                        input.type = 'number';
+                        input.name = `row_${i}`;
+                        input.required = true;
+                        input.style.width = '50px';
+                        input.style.marginRight = '5px';
+                        rowDiv.appendChild(input);
+                    }
+                    matrixInput.appendChild(rowDiv);
+                }
+
+                // Hide the "Generate Matrix Fields" button
+                generateMatrixButton.style.display = 'none';
+
+                // Show the "Calculate" button
+                calculateButton.style.display = 'block';
+            } else {
+                alert('Please enter valid rows and columns!');
+            }
+        }
+
+        // Event listener for the "Generate Matrix Fields" button
+        generateMatrixButton.addEventListener('click', generateMatrixFields);
+
+        // Add "Enter" key functionality for rows and columns inputs
+        rowsInput.addEventListener('keypress', handleKeyPress);
+        columnsInput.addEventListener('keypress', handleKeyPress);
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent default form submission
+                generateMatrixFields(); // Call the function to generate matrix fields
+            }
+        }
+    </script>
+</body>
+</html>
